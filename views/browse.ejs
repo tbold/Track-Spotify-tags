@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Track tags</title>
+</head>
+
+<body>
+    <script src="/main.js"></script>
+  <h2> Browse </h2>
+<link rel="stylesheet" href="browse.css" type="text/css">
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col" width="200px">ID</th>
+        <th scope="col" width="200px">Track Name</th>
+        <th scope="col" width="200px">Artist ID</th>
+        <th >Tags</th>
+        <th >Add Tags</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if(browse.length){
+
+        for(var i = 0; i< browse.length; i++) {%>  
+        <!-- <form action="/submit_form" method="POST"> -->
+        <tr >
+          <th scope="row">
+            <% if (browse[i].cover_art) { %>
+                <img src="<%= browse[i].cover_art[2].url %>" />
+            <%}%>
+            </th>
+          <td><%= browse[i].name%></td>
+          <td><%= browse[i].artists[0].name%></td>
+          <td id="badge-<%= browse[i].id %>" ><% if (browse[i].tags) { 
+              for (var j = 0; j < browse[i].tags.tag.length; j++) { %>
+                <ul class="badge badge-pill badge-outline-info">
+                    <a href="#1"><%= browse[i].tags.tag[j]%></a>
+                    <a href="#" class="badge badge-pill">X</a>
+                </ul>
+                
+            <%}%>
+          <%} else { %>
+              <ul></ul>
+            <% } %>
+        </td>
+        <td>
+          <input id="add-form-<%= browse[i].id %>" type="text" name="tag" placeholder="Enter tag" />
+          <td><input type="button" onclick="onClick('<%= browse[i].id %>')" value="Click" /></td>             
+          <!-- <button id="update-button" class="btn btn-outline-info btn-sm">+</button>   -->
+        </td>
+        </tr>
+      <!-- </form> -->
+
+        <% }
+      
+         }else{ %>
+             <tr>
+                <td colspan="3">No tracks</td>
+             </tr>
+          <% } %>    
+      
+      </tbody>
+    </table>
+</body>
+ 
+</html>

@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:900');
+
+body {
+    line-height: 125%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;    width: 100%;
+    margin: 0 auto;
+    margin: 1em 5px 0;
+    padding: 2em 2em 2em 2em;
+  }
+
+
+  .table {
+    border-radius: 3px;
+    padding: 1em;
+    margin: 1em 5px 0;
+    display: -moz-inline-grid;
+    line-height: 130%;
+  }
+
+.badge-outline-info {
+  color: #3da5f4;
+  border: 1px solid #3da5f4
+}
+
+
