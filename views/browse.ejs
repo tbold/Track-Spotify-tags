@@ -17,18 +17,17 @@
 <table class="table">
     <thead>
       <tr>
-        <th scope="col" width="200px">ID</th>
+        <th scope="col" width="100">ID</th>
         <th scope="col" width="200px">Track Name</th>
         <th scope="col" width="200px">Artist ID</th>
         <th >Tags</th>
-        <th >Add Tags</th>
+        <th width="200px">Add Tags</th>
       </tr>
     </thead>
     <tbody>
       <% if(browse.length){
 
         for(var i = 0; i< browse.length; i++) {%>  
-        <!-- <form action="/submit_form" method="POST"> -->
         <tr >
           <th scope="row">
             <% if (browse[i].cover_art) { %>
@@ -40,8 +39,8 @@
           <td id="badge-<%= browse[i].id %>" ><% if (browse[i].tags) { 
               for (var j = 0; j < browse[i].tags.tag.length; j++) { %>
                 <ul class="badge badge-pill badge-outline-info">
-                    <a href="#1"><%= browse[i].tags.tag[j]%></a>
-                    <a href="#" class="badge badge-pill">X</a>
+                    <a id="tag-<%= browse[i].id %>-<%= j%>" href="#1"><%= browse[i].tags.tag[j]%></a>
+                    <a href="#" onclick="onDelete('<%= browse[i].id %>', '<%= j%>')" class="badge badge-pill">X</a>
                 </ul>
                 
             <%}%>
@@ -51,11 +50,9 @@
         </td>
         <td>
           <input id="add-form-<%= browse[i].id %>" type="text" name="tag" placeholder="Enter tag" />
-          <td><input type="button" onclick="onClick('<%= browse[i].id %>')" value="Click" /></td>             
-          <!-- <button id="update-button" class="btn btn-outline-info btn-sm">+</button>   -->
+          <td><input type="button" onclick="onClick('<%= browse[i].id %>')" value="Add" /></td>             
         </td>
         </tr>
-      <!-- </form> -->
 
         <% }
       

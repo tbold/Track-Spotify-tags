@@ -11,7 +11,6 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// app.use(bodyParser.json({ type: 'application/*+json' }));
 app.use(express.static('public'));
 
 const uri = 'mongodb+srv://' + process.env.DB_USERNAME +':'+process.env.DB_PASSWORD+'@cluster0.bapzq.mongodb.net/<dbname>?retryWrites=true&w=majority';
@@ -83,6 +82,30 @@ app.put('/submit-form', (req, res) => {
   } else {
     res.render('index.ejs', {});
 
+  }
+  
+});
+
+app.delete('/delete-tag', (req, res) => {
+  if (tagsCollection) {
+    tagsCollection.updateOne(
+      { spotify_id: req.body.spotify_id },
+      { $pull: { 'tag': req.body.tag } 
+    },
+    ).then(tagsCollection.deleteOne({"$and": [{spotify_id: req.body.spotify_id}, { tags: { $exists: true, $size: 0 }}]}))
+    .then(result => {
+      res.json({
+          error: false
+        });
+        }).catch(error => {
+        res.json({
+          error: true
+        });
+      });
+  
+  } else {
+    console.log("no tags in database");
+    res.render('index.ejs', {});
   }
   
 });
