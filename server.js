@@ -20,11 +20,14 @@ let tagsCollection = null;
 app.get('/browse', async (req, res) => { 
     res.render('browse.ejs', {browse: {}});
 });
+app.get('/browseTag', async (req, res) => { 
+  res.render('browseTag.ejs', {key: {}});
+});
 
 app.post('/browse', async (req, res) => { 
   let key = req.body.searchKey;
   let type = req.body['choices-single-defaul'];
-  if (tagsCollection) {
+  if (tagsCollection && type == "Tracks") {
     tagsCollection.find().toArray()
     .then(async(tags) => {
       
@@ -47,13 +50,37 @@ app.post('/browse', async (req, res) => {
       res.render('browse.ejs', {browse: {}});
 
     }); 
+  } else if (tagsCollection && type == "Tags") {
+    // return collection with at least 1 matching tag
+    tagsCollection.find({"tag": key}).toArray()
+    .then(async(tags) => {
+      const getTracksByTag = (tags) => {
+        const promises = tags.map((track) => {
+          return Promise.all(track.tag.map(async (t) => {
+            return {
+              id: track.spotify_id,
+              tag: t,
+              track: await spotify(track.spotify_id, type)
+            }
+          }))
+        });
+        return Promise.all(promises);
+      }
+      let items = await getTracksByTag(tags);
+      console.log(items);
+      // res.render('browseTags.ejs', {browse: items});
+
+    }).catch((err) => {
+      console.log("couldn't load browse");
+      console.log(err);
+      res.render('browse.ejs', {browse: {}});
+
+    }); 
   } else {
     console.log("no tags to display");
-    var spotifyResponse = await spotify(key, type);
-    res.render('index.ejs', {browse: spotifyResponse});
+    res.render('index.ejs', {browse: {}});
   }
 });
-
 
 app.put('/submit-form', (req, res) => {
   console.log(req.body);
@@ -120,12 +147,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
       res.render('index.ejs', {});
     });
     
-    // tagsCollection.insertOne(req.body)
-  //     .then(result => {
-  //         console.log(result);
-  //         res.redirect('/');
-  //     })
-  //     .catch(error => console.error(error));
     app.put('/tags', (req, res) => {
         tagsCollection.findOneAndUpdate(/* ... */)
           .then(result => {

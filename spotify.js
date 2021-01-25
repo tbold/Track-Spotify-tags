@@ -1,8 +1,11 @@
 var rp = require('request-promise');
+const dotenv = require("dotenv");
+dotenv.config();
+
 var SpotifyWebApi = require('spotify-web-api-node');
 var spotifyApi = new SpotifyWebApi({
-    clientId: '97a96742fb7840ec9bb8e1ad2858479d',
-    clientSecret: '960e3ac6d1984eaaa168f5a6015c75c8',
+    clientId: process.env.SPOTIFY_ID,
+    clientSecret: process.env.SPOTIFY_SECRET,
     redirectUri: 'http://localhost:3000/'
   });
 
@@ -15,7 +18,17 @@ async function sendSearchRequest(key, type) {
             console.error(err);
             return [];
         });
-    } else {
+    } else if (type == "Tags") {
+        return spotifyApi.getTrack([key])
+        .then((data) => {
+            console.log("searching " + key);
+            return data.body;
+        }).catch((err) => {
+            console.error(err);
+            return [];
+        });
+    } 
+    else {
         return [];
     }
 }
